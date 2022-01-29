@@ -9,15 +9,20 @@ async function select(entity){
 
 async function insert(entity, fields, values){
     const database = await connection.connect();
-
     const valueParams = getValueParamsList(values);
     const fieldParams = fields.join(',');
-
-
     const sql = `INSERT INTO ${entity}(${fieldParams}) VALUES (${valueParams});`;
-    const valueList = values;
 
-    return await database.query(sql, valueList);
+    return await database.query(sql, values);
+}
+
+async function update(entity, fields, values, id){
+    const database = await connection.connect();
+    const idParam = `$${fields.length + 1}`;
+    const fieldParams = getFieldParamsList(fields);
+    const sql = `UPDATE ${entity} SET ${fieldParams} WHERE id=${idParam}`;
+
+    return await database.query(sql, [...values, id]);
 }
 
 
@@ -32,4 +37,15 @@ function getValueParamsList(values){
     return params.join(',');
 }
 
-module.exports = { select, insert }
+//Return a map with name of field as a key, and params ($1, $2...) as a value
+function getFieldParamsList(fields){
+    let params = [];
+
+    for(let count = 0; count < fields.length; count++){
+        params.push(`${fields[count]}=$${count+1}`);
+    }
+
+    return params.join(',');
+}
+
+module.exports = { select, insert, update }
