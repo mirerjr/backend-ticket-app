@@ -12,6 +12,7 @@ module.exports = class Database {
         const database = await this.#connection.connect();
         const response = await database.query(`SELECT * FROM ${this.entity} ORDER BY id DESC`);
 
+        database.release();
         return response.rows;
     }
 
@@ -21,8 +22,10 @@ module.exports = class Database {
         const fieldParams = fields.join(',');
         
         const sql = `INSERT INTO ${this.entity}(${fieldParams}) VALUES (${valueParams});`;
+        const result = await database.query(sql, values);
 
-        return await database.query(sql, values);        
+        database.release();
+        return result;        
     }
 
     async update(id, fields, values){
@@ -31,8 +34,10 @@ module.exports = class Database {
         const fieldParams = this.#getFieldParamsList(fields);
 
         const sql = `UPDATE ${this.entity} SET ${fieldParams} WHERE id=${idParam}`;
+        const result = await database.query(sql, [...values, id]);
 
-        return await database.query(sql, [...values, id]);
+        database.release();
+        return result;
     }
 
     //Returns a list with params ($1, $2...) based on value lenght
