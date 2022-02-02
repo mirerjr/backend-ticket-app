@@ -7,3 +7,5 @@ class TicketStatus{
     }
 
 }
+
+module.exports = TicketStatus

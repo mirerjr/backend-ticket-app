@@ -7,3 +7,6 @@ class TicketType{
     }
 
 }
+}
+
+module.exports = TicketType

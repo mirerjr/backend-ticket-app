@@ -19,3 +19,5 @@ class TicketLog{
     }
 
 }
+
+module.exports = TicketLog

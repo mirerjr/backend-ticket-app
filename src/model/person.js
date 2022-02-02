@@ -5,10 +5,12 @@ class Person{
     phone = null
     email = null
 
-    contructor(name, company, phone, email) {
+    constructor(name, company, phone, email) {
         this.name = name
         this.company = company
         this.phone = phone
         this.email = email
-    }
+    } 
 }
+
+module.exports = Person
