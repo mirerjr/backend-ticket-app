@@ -16,6 +16,16 @@ module.exports = class Database {
         return response.rows;
     }
 
+    async selectById(id){
+        const database = await this.#connection.connect();
+        const sql = `SELECT * FROM ${this.entity} WHERE id=$1`;
+        const values = [id];
+        const result = await database.query(sql, values)
+
+        database.release();
+        return result;
+    }
+
     async insert(fields, values){
         const database = await this.#connection.connect();
         const valueParams = this.#getValueParamsList(values);
