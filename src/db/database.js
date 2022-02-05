@@ -2,28 +2,33 @@
 module.exports = class Database {
     #connection = null;
     entity = null;
+    fields = null
+    values = null
 
     constructor(entity){
         this.#connection = require("./conection");
-        this.entity = entity
+        this.entity = entity;
     }
 
     async select(){
         const database = await this.#connection.connect();
         const response = await database.query(`SELECT * FROM ${this.entity} ORDER BY id DESC`);
+        const data = this.#formatSnakeToCamelCase(response.rows);
 
         database.release();
-        return response.rows;
+        return data;
     }
 
     async selectById(id){
         const database = await this.#connection.connect();
         const sql = `SELECT * FROM ${this.entity} WHERE id=$1`;
         const values = [id];
-        const result = await database.query(sql, values)
+        const result = await database.query(sql, values);
+
+        const data = this.#formatSnakeToCamelCase(result.rows);
 
         database.release();
-        return result;
+        return data;
     }
 
     async insert(fields, values){
@@ -39,9 +44,11 @@ module.exports = class Database {
     }
 
     async update(id, fields, values){
+        this.fields = this.#formatFieldsToSnakeCase(fields);
+
         const database = await this.#connection.connect();
-        const idParam = `$${fields.length + 1}`;
-        const fieldParams = this.#getFieldParamsList(fields);
+        const idParam = `$${this.fields.length + 1}`;
+        const fieldParams = this.#getFieldParamsList(this.fields);
 
         const sql = `UPDATE ${this.entity} SET ${fieldParams} WHERE id=${idParam}`;
         const result = await database.query(sql, [...values, id]);
@@ -70,5 +77,46 @@ module.exports = class Database {
         }
 
         return params.join(',');
+    }
+
+    #formatFieldsToSnakeCase(camelFields){
+        const fields = camelFields;
+
+        return fields.map((field, line) => {
+            return field.split('').map((character, index) => {
+                if(character == character.toUpperCase()){
+                    return '_' + character.toLowerCase() 
+                }
+                return character
+            }).join('');
+        });
+    }      
+
+    #formatSnakeToCamelCase(snakeRows){
+        return snakeRows.map((row) => {
+            const camelRow = {}
+            const values = Object.values(row)
+            const keys = Object.keys(row).map((field) => {
+
+                return field.split('_').map((word, index) => {                    
+                    if(index == 0){
+                        return word 
+                    }
+                    
+                    if(index > 0) {
+                        let camelWord = ''                        
+                        camelWord += word.at(0).toUpperCase()
+                        camelWord += word.split('').splice(1).join('')
+                        return camelWord
+                    }                  
+                }).join('')
+            })
+
+            keys.forEach((key, index) => {
+                camelRow[key] = values[index]
+            })            
+
+            return camelRow
+        });  
     }
 }
