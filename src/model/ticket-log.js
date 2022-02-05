@@ -1,9 +1,9 @@
 class TicketLog{
     id = null
-    ticket_status_id = null
-    ticket_id = null
+    ticketStatusId = null
+    ticketId = null
     date = null
-    status_changed = null
+    statusChanged = null
     commented = null
     escalated = null
     description = null

@@ -2,10 +2,11 @@ const Database = require("../db/database");
 
 class TicketType{
     id = null
-    name = null
+    typeName = null
     
     constructor(name){
-        this.name = name
+        this.typeName = typeName
+    }
     }
 
     async save(){

@@ -1,6 +1,6 @@
 class Person{
     id = null
-    name = null
+    fullName = null
     company = null
     phone = null
     email = null

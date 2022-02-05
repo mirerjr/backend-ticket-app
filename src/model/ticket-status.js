@@ -1,9 +1,9 @@
 class TicketStatus{
     id = null
-    name = null
+    statusName = null
     
-    constructor(name){
-        this.name = name
+    constructor(statusName){
+        this.statusName = statusName
     }
 
 }
