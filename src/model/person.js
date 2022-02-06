@@ -1,3 +1,5 @@
+const Database = require("../db/database")
+
 class Person{
     id = null
     fullName = null
@@ -5,11 +7,55 @@ class Person{
     phone = null
     email = null
 
-    constructor(name, company, phone, email) {
-        this.name = name
-        this.company = company
-        this.phone = phone
-        this.email = email
+    constructor(data) {
+        Object.assign(this, data)
+    }
+    
+    static async get(id){
+        const database = new Database('person')
+        const data = await database.selectById(id)
+
+        if(data){
+            return new this(data[0])
+        }
+
+        return null
+    }
+
+    static async findAll(){
+        const database = new Database('person')
+        const data = await database.select()
+        const result = []
+
+        if(data){
+            data.forEach((row, index) => {
+                result[index] = new this(row)
+            })
+        }
+
+        return result
+    }
+
+    async save(){
+        const database = new Database('person')
+
+        if(this.id){
+            const result = await database.selectById(this.id)
+
+            if(result){
+
+                const fields = Object.keys(this).slice(1)
+                const values = Object.values(this).slice(1)
+
+                return await database.update(this.id, fields, values)
+            }
+        }
+
+            const fields = ['full_name', 'company', 'phone', 'email']
+            const values = [this.fullName, this.company, this.phone, this.email]
+            
+            return await database.insert(fields, values)
+
     } 
 }
 
