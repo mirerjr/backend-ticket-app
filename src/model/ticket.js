@@ -1,8 +1,8 @@
 class Ticket{
     id = null
-    person_id = null
-    ticket_type_id = null
-    date_created = null
+    personId = null
+    ticketTypeId = null
+    dateCreated = null
     description = null
     title = null
     open = null
