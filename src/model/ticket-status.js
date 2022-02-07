@@ -39,18 +39,18 @@ class TicketStatus{
     async save(){
         const database = new Database('ticket_status')
 
+        const fields = Object.keys(this).slice(1)
+        const values = Object.values(this).slice(1)
+
         if(this.id){
             const result = await database.selectById(this.id)
 
             if(result){
-                const fields = Object.keys(this).slice(1)
-                const values = Object.values(this).slice(1)
-
                 return await database.update(this.id, fields, values)
             }
         }
 
-        return await database.insert(['status_name'], [this.statusName])
+        return await database.insert(fields, values)
     }
 
 }

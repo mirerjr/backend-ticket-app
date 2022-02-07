@@ -34,7 +34,7 @@ module.exports = class Database {
     async insert(fields, values){
         const database = await this.#connection.connect();
         const valueParams = this.#getValueParamsList(values);
-        const fieldParams = fields.join(',');
+        const fieldParams = this.#formatFieldsToSnakeCase(fields).join(',');
         
         const sql = `INSERT INTO ${this.entity}(${fieldParams}) VALUES (${valueParams});`;
         const result = await database.query(sql, values);
