@@ -13,10 +13,6 @@ const port = process.env.API_PORT
 app.use(express.json())
 
 
-app.get('/', (request, response) => {
-    response.send('Hello World!')
-})
-
 app.get('/tickets', async (request, response) => {
     const tickets = await Ticket.findAll()
     
@@ -67,7 +63,5 @@ app.get('/persons', async (request, response) => {
     }
 })
 
-app.listen(port, () => {
-    console.log('Test')
-})
+module.exports = { app, port }
 

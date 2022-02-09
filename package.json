@@ -2,7 +2,7 @@
   "name": "ticket-app-backend",
   "version": "1.0.0",
   "description": "Aplicação para realizar o controle de tickets",
-  "main": "./src/api/routes.js",
+  "main": "./src/index.js",
   "author": "Mirer Balbino de Andrade Junior",
   "license": "MIT",
   "scripts": {
