@@ -7,10 +7,13 @@ const TicketType = require('../model/ticket-type')
 const Person = require('../model/person')
 
 const express = require('express')
+const cors = require('cors')
+
 const app = express()
 const port = process.env.API_PORT
 
 app.use(express.json())
+app.use(cors())
 
 
 app.get('/tickets', async (request, response) => {
