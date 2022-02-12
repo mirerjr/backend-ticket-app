@@ -79,6 +79,19 @@ app.get('/ticket-status/:id', async (request, response) => {
     }
 })
 
+app.post('/ticket-status', async (request, response) => {
+    const { statusName } = request.body
+    const ticketStatus = new TicketStatus({statusName})
+    
+    const saved = await ticketStatus.save()
+
+    if(saved){
+        response.sendStatus(201)
+    } else {
+        response.sendStatus(400)
+    }
+})
+
 app.get('/ticket-types', async (request, response) => {
     const types = await TicketType.findAll()
 
