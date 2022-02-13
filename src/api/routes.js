@@ -37,6 +37,28 @@ app.get('/tickets/:id', async (request, response) => {
     }
 })
 
+app.post('/tickets', async (request, response) => {
+    const data = { 
+        personId, 
+        ticketTypeId, 
+        description, 
+        title, 
+        important
+    } = request.body
+    
+    data.open = true
+    data.dateCreated = new Date()
+
+    const ticket = new Ticket(data)    
+    const saved = await ticket.save()
+
+    if(saved){
+        response.sendStatus(201)
+    } else {
+        response.sendStatus(400)
+    }
+})
+
 app.get('/ticket-logs', async (request, response) => {
     const logs = await TicketLog.findAll()
 
@@ -55,6 +77,28 @@ app.get('/ticket-logs/:id', async (request, response) => {
         response.status(200).json(ticketLog)
     } else {
         response.status(404).json({error: 'Ticket log not found'})
+    }
+})
+
+app.post('/ticket-logs', async (request, response) => {
+    const data = { 
+        ticketStatusId, 
+        ticketId, 
+        statusChanged, 
+        commented, 
+        escalated,
+        description
+    } = request.body
+    
+    data.date = new Date()
+
+    const ticketLog = new TicketLog(data)    
+    const saved = await ticketLog.save()
+
+    if(saved){
+        response.sendStatus(201)
+    } else {
+        response.sendStatus(400)
     }
 })
 
@@ -113,6 +157,19 @@ app.get('/ticket-types/:id', async (request, response) => {
     }
 })
 
+app.post('/ticket-types', async (request, response) => {
+    const { typeName } = request.body
+    const ticketType = new TicketType({typeName})
+    
+    const saved = await ticketType.save()
+
+    if(saved){
+        response.sendStatus(201)
+    } else {
+        response.sendStatus(400)
+    }
+})
+
 app.get('/persons', async (request, response) => {
     const persons = await Person.findAll()
 
@@ -133,6 +190,20 @@ app.get('/persons/:id', async (request, response) => {
         response.status(404).json({error: 'Person not found'})
     }
 })
+
+app.post('/persons', async (request, response) => {
+    const data = { fullName, company, phone, email} = request.body
+    const person = new Person(data)
+    
+    const saved = await person.save()
+
+    if(saved){
+        response.sendStatus(201)
+    } else {
+        response.sendStatus(400)
+    }
+})
+
 
 module.exports = { app, port }
 
