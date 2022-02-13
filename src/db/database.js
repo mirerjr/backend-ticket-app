@@ -57,6 +57,15 @@ module.exports = class Database {
         return result;
     }
 
+    async query(sql, values){
+        const database = await this.#connection.connect();
+        const result = await database.query(sql, values)
+        const data = this.#formatSnakeToCamelCase(result.rows);
+
+        database.release();
+        return data;        
+    }
+
     //Returns a list with params ($1, $2...) based on value lenght
     #getValueParamsList(values){
         let params = [];

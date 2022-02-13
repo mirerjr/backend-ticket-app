@@ -37,6 +37,23 @@ app.get('/tickets/:id', async (request, response) => {
     }
 })
 
+app.get('/tickets/:id/logs', async (request, response) => {
+    const {id} = request.params
+    const ticket = await TicketLog.findAllByTicket(id)
+
+    if(!ticket){
+        response.status(404).json({error: 'Ticket not found'})
+    }
+
+    const logs = await TicketLog.findAllByTicket(id)
+
+    if(logs){
+        response.status(200).json(logs)
+    } else {
+        response.status(404).json({error: 'No logs were found for this ticket id'})
+    }
+})
+
 app.post('/tickets', async (request, response) => {
     const data = { 
         personId, 

@@ -39,6 +39,23 @@ class TicketLog{
         return result
     }
 
+    static async findAllByTicket(id){
+        const database = new Database('ticket_log')
+        const sql = "SELECT * FROM ticket_log WHERE ticket_id = $1 ORDER BY date DESC"
+        const values = [id]
+        const result = []
+        
+        const data = await database.query(sql, values)
+
+        if(data){
+            data.forEach((row, index) => {
+                result[index] = new this(row)
+            })
+        }
+           
+        return result
+    }
+
     async save(){
         const database = new Database('ticket_log')
 
