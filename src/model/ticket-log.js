@@ -9,6 +9,8 @@ class TicketLog{
     commented = null
     escalated = null
     description = null
+    created = null
+    closed = null
 
     constructor(data){
         Object.assign(this, data)

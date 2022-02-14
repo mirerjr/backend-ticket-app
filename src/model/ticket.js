@@ -1,4 +1,5 @@
 const Database = require("../db/database")
+const TicketLog = require("./ticket-log")
 
 class Ticket{
     id = null
@@ -53,7 +54,26 @@ class Ticket{
             }
         }
 
-        return await database.insert(fields, values)
+        const result = await database.insert(fields, values)
+        
+        if(result){
+            database.entity = 'ticket-log'
+
+            const ticketLog = new TicketLog({                
+                ticketId: this.id,
+                date: new Date(),
+                statusChanged: false,
+                commented: false,
+                escalated: false,
+                description: "Ticket Criado",
+                created: true,
+                closed: false
+            })
+            
+            await ticketLog.save()
+        }
+        
+        return result
     }
 
 

@@ -104,7 +104,9 @@ app.post('/ticket-logs', async (request, response) => {
         statusChanged, 
         commented, 
         escalated,
-        description
+        description,
+        created,
+        closed
     } = request.body
     
     data.date = new Date()
