@@ -57,6 +57,7 @@ class Ticket{
         const result = await database.insert(fields, values)
         
         if(result){
+            this.id = result.rows[0].id
             database.entity = 'ticket-log'
 
             const ticketLog = new TicketLog({                
