@@ -55,14 +55,23 @@ app.get('/tickets/:id/logs', async (request, response) => {
 })
 
 app.post('/tickets', async (request, response) => {
-    const data = { 
-        personId, 
-        ticketTypeId, 
-        description, 
-        title, 
-        important
-    } = request.body
+    let personId
+
+    if(request.body.personId){
+        personId = request.body.personId
+    } 
     
+    if (request.body.person){
+        const person = new Person(request.body.person)
+        personId = await person.save()
+    }
+
+    const data = {} 
+    data.ticketTypeId = request.body.ticketTypeId
+    data.description = request.body.description
+    data.title = request.body.title
+    data.important = request.body.important
+    data.personId = personId
     data.open = true
     data.dateCreated = new Date()
 

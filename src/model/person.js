@@ -49,8 +49,9 @@ class Person{
                 return await database.update(this.id, fields, values)
             }
         }
-            
-        return await database.insert(fields, values)
+
+        const result = await database.insert(fields, values)         
+        return result.rows[0].id
 
     } 
 }
